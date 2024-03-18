@@ -20,25 +20,6 @@ def dropbox_api():
     dbx = dropbox.Dropbox(token)
     return dbx
 
-# def download_attachments(service, user_id='me'):
-#     results = service.users().messages().list(userId=user_id, q='is:unread').execute()
-#     messages = results.get('messages', [])
-    
-#     for message in messages:
-#         msg = service.users().messages().get(userId=user_id, id=message['id']).execute()
-#         if 'parts' in msg['payload']:
-#             for part in msg['payload']['parts']:
-#                 if part['filename']:
-#                     attachment_id = part['body']['attachmentId']
-#                     attachment = service.users().messages().attachments().get(userId=user_id, messageId=message['id'], id=attachment_id).execute()
-#                     file_data = base64.urlsafe_b64decode(attachment['data'].encode('UTF-8'))
-
-#                     file_path = os.path.join('./downloads', part['filename'])
-#                     with open(file_path, 'wb') as file:
-#                         file.write(file_data)
-
-#                     yield file_path
-
 def download_attachments(service, user_id='me'):
     results = service.users().messages().list(userId=user_id, q='is:unread has:attachment').execute()
     messages = results.get('messages', [])
