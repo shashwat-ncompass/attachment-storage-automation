@@ -28,16 +28,19 @@ def send_email():
 
 @app.route('/upload_to_dropbox', methods=['POST'])
 def upload_to_dropbox():
-    data = request.get_json()
-    file_paths = data.get('file_paths', [])
+    try:
+        data = request.get_json()
+        file_paths = data.get('file_paths', [])
 
-    cmd = ['python', 'dropbox/download_upload.py']
-    for file_path in file_paths:
-        cmd.extend(['--file', file_path])
+        cmd = ['python', 'dropbox/download_upload.py']
+        for file_path in file_paths:
+            cmd.extend(['--file', file_path])
 
-    result = run(cmd)
-    
-    return jsonify({'result': result.returncode})
+        result = run(cmd)
+
+        return jsonify({'result': result.returncode})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)

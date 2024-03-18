@@ -1,4 +1,5 @@
 import os
+import json
 import base64
 import dropbox
 import dropbox.files
@@ -48,12 +49,24 @@ def upload_to_dropbox(dbx, file_paths):
         except Exception as e:
             print(f"Failed to upload {os.path.basename(file_path)}:", str(e))
 
+def dropbox_list_files(dbx, folder_path):
+    try:
+        files_list = dbx.files_list_folder(folder_path)
+        file_names = [entry.name for entry in files_list.entries if isinstance(entry, dropbox.files.FileMetadata)]
+        return {'files': file_names}
+    except dropbox.exceptions.ApiError as e:
+        return {'error': f"Error listing files in Dropbox: {e}"}
+    
 def main():
     gmail_service = gmail_api()
     dbx = dropbox_api()
     
     downloaded_files = download_attachments(gmail_service)
     upload_to_dropbox(dbx, downloaded_files)
+
+    response = dropbox_list_files(dbx, '/downloads')
+    json_response = json.dumps(response)
+    print(json_response)
 
 if __name__ == '__main__':
     main()
