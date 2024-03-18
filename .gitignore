@@ -1,0 +1,7 @@
+downloads/*
+!downloads/
+dropbox/credentials.json
+dropbox/token.txt
+__pycache__/
+token_gmail_v1.pickle
+dropg/
