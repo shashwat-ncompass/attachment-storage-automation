@@ -24,6 +24,9 @@ def dropbox_api():
 def download_attachments(service, user_id='me'):
     results = service.users().messages().list(userId=user_id, q='is:unread has:attachment').execute()
     messages = results.get('messages', [])
+
+    downloads_path = './downloads'
+    os.makedirs(downloads_path, exist_ok=True)
     
     for message in messages:
         msg = service.users().messages().get(userId=user_id, id=message['id']).execute()
